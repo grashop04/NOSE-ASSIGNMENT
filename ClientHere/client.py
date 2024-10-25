@@ -20,22 +20,24 @@ def main():
 
     try:
         request = sys.argv[3]
-
-        if request=="list":
-            sock.send(request.encode('utf-8'))
-            recv_listing(sock)
-        
-
-        filename = sys.argv[4]
         sock.send(request.encode('utf-8'))
-        sock.send(filename.encode('utf-8'))
+        print(f"Received request: {request}")
 
-        if request == "put":
-            get_file(sock, filename)
-            print("File uploaded successfully")
-        elif request =="get":
-            recv_file(sock, filename)
-            print(f"File '{filename}' downloaded successfully")
+        if request == "list":
+            # No need to send a filename for 'list'
+            recv_listing(sock)
+        else:
+            # Send the filename after sending the request for 'get' or 'put'
+            filename = sys.argv[4]
+            sock.send(f"{filename}".encode('utf-8'))
+            print(f"Sent filename: {filename}")
+
+            if request == "put":
+                get_file(sock, filename)
+                print("File uploaded successfully")
+            elif request == "get":
+                recv_file(sock, filename)
+                print(f"File '{filename}' downloaded successfully")
 
         
     except FileNotFoundError:
