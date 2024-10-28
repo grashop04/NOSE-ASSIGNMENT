@@ -20,22 +20,20 @@ def main():
 
     try:
         request = sys.argv[3]
-        sock.send(request.encode('utf-8'))
-        print(f"Received request: {request}")
+        filename = sys.argv[4] if len(sys.argv) > 4 else ""
+
+        request_message = f"{request} {filename}".strip()
+        sock.send(request_message.encode('utf-16'))
+        print(f"Sent request: {request_message}")
+
 
         if request == "list":
             # No need to send a filename for 'list'
             recv_listing(sock)
-        else:
-            # Send the filename after sending the request for 'get' or 'put'
-            filename = sys.argv[4]
-            sock.send(f"{filename}".encode('utf-8'))
-            print(f"Sent filename: {filename}")
-
-            if request == "put":
+        elif request == "put":
                 get_file(sock, filename)
                 print("File uploaded successfully")
-            elif request == "get":
+        elif request == "get":
                 recv_file(sock, filename)
                 print(f"File '{filename}' downloaded successfully")
 

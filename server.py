@@ -16,21 +16,22 @@ def main():
             cli_socket, cli_address = server_socket.accept()
             try:
                 # Receive the request from the client
-                request = cli_socket.recv(1024).decode('utf-8')
+                request = cli_socket.recv(1024).decode('utf-16').strip()
                 print(f"Received request: {request}")
 
-                #if the user requests put, then we use send_file function
-                if request == "put":
-                    filename = cli_socket.recv(1024).decode('utf-8')
+                # Split command and filename if present
+                parts = request.split(" ", 1)
+                command = parts[0]
+                filename = parts[1] if len(parts) > 1 else ""
+
+                # Check command type and process accordingly
+                if command == "put" and filename:
                     recv_file(cli_socket, filename)
                     print(f"Received the file '{filename}' from {cli_address}")
-                #if the user requests get, then we use the recv_file function
-                elif request=="get":
-                    filename = cli_socket.recv(1024).decode('utf-8')
+                elif command == "get" and filename:
                     get_file(cli_socket, filename)
-                    print(f"Received the file '{filename}' from {cli_address}")
-                #if the user requests send_listing we use the send_listing function 
-                elif request=="list":
+                    print(f"Sent the file '{filename}' to {cli_address}")
+                elif command == "list" and not filename:
                     send_listing(cli_socket)
                     print(f"Sent file listing to {cli_address}")
                 else:
