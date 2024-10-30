@@ -17,13 +17,15 @@ def recv_file(cli_socket, filename):
     buffer_size = 8192
     try:
         with open(filename, "wb") as file:
+            filetype = filename.split(".")
+            print(filetype)
             while True:
                 data = cli_socket.recv(buffer_size)
                 if data == b'EOF':
                     print("End of file transfer reached.")
                     break
                 elif not data:
-                    print("Connection closed unexpectedly.")
+                    print("Connection closed unexpectedly. DATA = ", data)
                     break
                 file.write(data)  # Write received data to the file
             print(f"File '{filename}' received successfully.")

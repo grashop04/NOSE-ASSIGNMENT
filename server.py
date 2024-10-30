@@ -38,9 +38,15 @@ def main():
                     print(f"Invalid request received: {request}")
                     cli_socket.send(b"Error: Invalid request format")
             finally:
+                print("about to close cli socket")
                 cli_socket.close()
+                print("succesfully closed cli socket")
+            print("final part of try")
+        
     finally:
+        print("about to close server socket")
         server_socket.close()
+        print("succesfully closed server socket")
 
 if __name__ == "__main__":
     main()
