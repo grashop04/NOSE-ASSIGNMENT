@@ -1,6 +1,6 @@
 import sys
 import socket 
-from functions import get_file, recv_file, recv_listing
+from functions import send_file, recv_file, recv_listing
 
 def main():
     valid_input = ["put", "get", "list"]
@@ -30,7 +30,7 @@ def main():
             # No need to send a filename for 'list'
             recv_listing(sock)
         elif request == "put":
-                get_file(sock, filename)
+                send_file(sock, filename)
                 print("File uploaded successfully")
         elif request == "get":
                 recv_file(sock, filename)

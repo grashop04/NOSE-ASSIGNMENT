@@ -2,7 +2,7 @@ import os
 import re
 
 # Send a file to the client
-def get_file(cli_socket, filename):
+def send_file(cli_socket, filename):
     #defining special characrets 
     special_chars_pattern = r'[/$#\\,"]'
     
