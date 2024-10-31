@@ -23,9 +23,8 @@ def main():
         filename = sys.argv[4] if len(sys.argv) > 4 else ""
 
         request_message = f"{request} {filename}".strip()
-        sock.send(request_message.encode('utf-16'))
+        sock.send(request_message.encode('utf-8'))
         print(f"Sent request: {request_message}")
-
 
         if request == "list":
             # No need to send a filename for 'list'
@@ -37,13 +36,21 @@ def main():
                 recv_file(sock, filename)
                 print(f"File '{filename}' downloaded successfully")
 
-        
+    except (ConnectionResetError, BrokenPipeError):
+        print("Connection was reset by the peer. Transfer interrupted.")   
+
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
+
     except IOError as e:
         print(f"Error while sending file: {e}")
+
+    except Exception as e:
+        print(f"Client error: {e}")
+
     finally:
         sock.close()
+        print("Socket closed.")
 
 if __name__ == "__main__":
     main()
